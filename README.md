@@ -1,163 +1,144 @@
-# NeoConnect – Complaint Management Chatbot
+# NeoConnect Project
 
-## Project Overview
-NeoConnect is a full-stack complaint management system that allows users to easily submit and track complaints through a chatbot-style interface.  
-The system helps organizations manage internal issues efficiently by allowing users to register complaints and receive a unique tracking ID.
+## Overview
+NeoConnect is a smart complaint management system for organizations. It allows users to **submit complaints**, **track them using a tracking ID**, and lets the admin view all complaints in a **Dashboard** and update their status.  
 
-Each complaint is stored in a database and can be tracked later using the generated tracking ID.
-
----
-
-## Features
-- Submit complaints through an interactive chatbot interface
-- Automatic generation of a unique complaint tracking ID
-- Store complaint details in a database
-- Simple and user-friendly interface
-- Organized complaint records for easy management
+The system is designed to streamline complaint handling, reduce delays, and improve organizational accountability.
 
 ---
 
-## Tech Stack
-
-### Frontend
-- HTML
-- CSS
-- JavaScript
-
-### Backend
-- Node.js
-- Express.js
-
-### Database
-- MongoDB
-
-### Deployment
-- Vercel
-
-### Version Control
-- GitHub
+## Project Objective
+- Enable users to submit complaints in a structured format.  
+- Generate a **unique tracking ID** for every complaint.  
+- Allow users to track the status of their complaint.  
+- Provide an admin dashboard to monitor, manage, and update complaints.  
+- Store all complaints securely in a database for future reference and analysis.
 
 ---
 
-## System Architecture
+## Technology Stack
 
-User → Chatbot Interface → Backend API → Database
-
-1. User opens the web application.
-2. User submits a complaint through the chatbot form.
-3. Backend server processes the request.
-4. Complaint details are stored in the database.
-5. A unique tracking ID is generated.
-6. The user receives confirmation with the tracking ID.
-
----
-## Implementation Details
-
-### Frontend
-The frontend provides a chatbot-style interface where users can submit complaints by filling a form. The interface collects details such as category, department, location, severity, and description.
-
-### Backend
-The backend is built using Node.js and Express.js. It exposes API endpoints that receive complaint data from the frontend and process the request.
-
-When a complaint is submitted:
-1. The backend receives the form data.
-2. A unique tracking ID is generated.
-3. The complaint data is stored in the database.
-4. A confirmation message with the tracking ID is returned to the user.
-
-### Database
-MongoDB is used as the database to store complaint records. Each complaint is stored as a document containing fields such as tracking ID, category, department, location, severity, description, and status.
-
-### Complaint Tracking
-Each submitted complaint is assigned a unique tracking ID which can be used later to track the status of the complaint.
+| Layer         | Technology/Tool                       |
+|---------------|--------------------------------------|
+| Frontend      | Next.js, React, Tailwind CSS          |
+| Backend       | Node.js, Express.js                   |
+| Database      | MongoDB Atlas                         |
+| Hosting       | Frontend → Vercel, Backend → Render  |
 
 ---
 
-## Project Structure
-neoconnect-project
-│
-├── frontend
-│ ├── index.html
-│ ├── style.css
-│ └── script.js
-│
-├── backend
-│ ├── server.js
-│ ├── routes
-│ ├── models
-│ └── database connection
-│
-└── README.md
+## Folder Structure
+
+
+neoconnect-project/
+├─ frontend/ ← Next.js frontend code
+├─ backend/ ← Express backend code
+├─ README.md ← Project information
+└─ NeoConnect_Presentation.pptx ← Project presentation (separate file)
+
 
 ---
 
-## Installation and Setup
+## Implementation / How it Works
 
-### 1. Clone the Repository
-https://github.com/harikaragiri/neoconnect-project.git
-### 2. Navigate to Project Folder
+### 1. Submit Complaint
+- Users fill a form with category, department, location, severity, and description.  
+- A **unique tracking ID** is generated using the timestamp.  
+- Data is sent to the **backend API** and stored in MongoDB.  
 
+**Backend snippet:**
+```js
+const trackingId = "NEO-" + Date.now();
+const complaint = new Complaint({
+  trackingId,
+  category,
+  department,
+  location,
+  severity,
+  description
+});
+await complaint.save();
+2. Track Complaint
 
-cd neoconnect-project
+Users search using the tracking ID.
 
+Backend queries MongoDB for the complaint record and returns details including status.
 
-### 3. Install Backend Dependencies
+Frontend snippet:
 
+const res = await fetch(`${API_URL}/api/complaints/track/${trackingId}`);
+const data = await res.json();
+setResult(data);
+3. Admin Dashboard
 
+Admin can view all complaints in a table.
+
+Can update status (New, In Progress, Resolved) for each complaint.
+
+Changes are saved in MongoDB and reflected in the frontend.
+
+Update status snippet:
+
+await fetch(`${API_URL}/api/complaints/update/${id}`, {
+  method: "PUT",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ status }),
+});
+4. Database Design
+
+Collection: complaints
+
+Fields:
+
+trackingId: String (unique)
+
+category: String
+
+department: String
+
+location: String
+
+severity: String
+
+description: String
+
+status: String (default = "New")
+
+createdAt: Date
+
+How to Run Locally
+Backend
 cd backend
 npm install
+# set .env with MONGO_URI and PORT
+npm start
+Frontend
+cd frontend
+npm install
+npm run dev
 
+Make sure your frontend uses the live backend URL:
 
-### 4. Run the Server
+const API_URL = "https://neoconnect-backend-dlnr.onrender.com";
+Features
+User
 
+Submit complaints
 
-node server.js
+Get a unique tracking ID
 
+Track complaint status
 
-The server will run on:
+Admin
 
+View all complaints in a Dashboard
 
-http://localhost:3000
+Update complaint status (New, In Progress, Resolved)
 
+Real-time status updates
 
----
+Live Demo
 
-## Database
+Frontend (Vercel): https://neoconnect-project.vercel.app
 
-The project uses MongoDB to store complaint records.
-
-Example complaint document stored in the database:
-
-
-trackingId: NEO-1773394678086
-category: Safety
-department: IT
-location: Floor 2
-severity: High
-description: AC not working
-status: New
-
-
----
-
-## Deployment
-
-Live Application:
-
-
-https://neoconnect-project.vercel.app
-
-
----
-
-## Future Enhancements
-- Admin dashboard for managing complaints
-- Complaint status updates (New → In Progress → Resolved)
-- Email notifications for complaint updates
-- User authentication system
-- Analytics dashboard for complaints
-
----
-
-## Conclusion
-NeoConnect simplifies the process of complaint registration and tracking through an easy-to-
+Backend API (Render): https://neoconnect-backend-dlnr.onrender.com
