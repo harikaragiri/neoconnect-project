@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
 
@@ -85,6 +86,16 @@ export default function Home() {
           </button>
 
         </form>
+
+        {/* Track Complaint Button */}
+
+        <div className="text-center mt-6">
+          <Link href="/track">
+            <button className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-semibold transition">
+              Track Complaint
+            </button>
+          </Link>
+        </div>
 
       </div>
 
