@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 export default function Dashboard() {
   const [complaints, setComplaints] = useState([]);
 
+  // Replace with your Render backend URL
+  const API_URL = "https://neoconnect-backend-dlnr.onrender.com";
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/complaints/all")
+    fetch(`${API_URL}/api/complaints/all`)
       .then((res) => res.json())
-      .then((data) => setComplaints(data));
+      .then((data) => setComplaints(data))
+      .catch((err) => console.error("Error fetching complaints:", err));
   }, []);
 
   const severityColor = (severity: string) => {
@@ -16,15 +20,30 @@ export default function Dashboard() {
     return "bg-green-500";
   };
 
+  const updateStatus = async (id: string, status: string) => {
+    try {
+      await fetch(`${API_URL}/api/complaints/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      // Update state locally after change
+      setComplaints((prev: any) =>
+        prev.map((c: any) =>
+          c._id === id ? { ...c, status: status } : c
+        )
+      );
+    } catch (err) {
+      console.error("Error updating status:", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 p-10 text-white">
-
       <h1 className="text-3xl font-bold mb-8">Complaint Dashboard</h1>
 
       <div className="bg-slate-800 rounded-lg shadow-lg overflow-hidden">
-
         <table className="w-full">
-
           <thead className="bg-slate-700 text-gray-200">
             <tr>
               <th className="p-3 text-left">Tracking ID</th>
@@ -37,13 +56,11 @@ export default function Dashboard() {
           </thead>
 
           <tbody>
-
             {complaints.map((c: any) => (
               <tr
                 key={c._id}
                 className="border-b border-slate-700 hover:bg-slate-700 transition"
               >
-
                 <td className="p-3">{c.trackingId}</td>
                 <td className="p-3">{c.category}</td>
                 <td className="p-3">{c.department}</td>
@@ -61,21 +78,8 @@ export default function Dashboard() {
 
                 <td className="p-3">
                   <select
-                    defaultValue={c.status}
-                    onChange={async (e) => {
-                      await fetch(
-                        `http://localhost:5000/api/complaints/update/${c._id}`,
-                        {
-                          method: "PUT",
-                          headers: {
-                            "Content-Type": "application/json"
-                          },
-                          body: JSON.stringify({
-                            status: e.target.value
-                          })
-                        }
-                      );
-                    }}
+                    value={c.status}
+                    onChange={(e) => updateStatus(c._id, e.target.value)}
                     className="bg-slate-700 text-white p-2 rounded border border-slate-600 focus:outline-none"
                   >
                     <option value="New">New</option>
@@ -83,16 +87,11 @@ export default function Dashboard() {
                     <option value="Resolved">Resolved</option>
                   </select>
                 </td>
-
               </tr>
             ))}
-
           </tbody>
-
         </table>
-
       </div>
-
     </div>
   );
 }
