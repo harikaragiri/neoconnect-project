@@ -7,30 +7,42 @@ export default function Dashboard() {
   // Replace with your Render backend URL
   const API_URL = "https://neoconnect-backend-dlnr.onrender.com";
 
+  // Fetch all complaints from backend
   useEffect(() => {
-    fetch(`${API_URL}/api/complaints/all`)
-      .then((res) => res.json())
-      .then((data) => setComplaints(data))
-      .catch((err) => console.error("Error fetching complaints:", err));
+    const fetchComplaints = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/complaints/all`);
+        const data = await res.json();
+        setComplaints(data);
+      } catch (err) {
+        console.error("Error fetching complaints:", err);
+      }
+    };
+
+    fetchComplaints();
   }, []);
 
+  // Color coding for severity
   const severityColor = (severity: string) => {
     if (severity === "High") return "bg-red-500";
     if (severity === "Medium") return "bg-yellow-500";
     return "bg-green-500";
   };
 
+  // Update complaint status
   const updateStatus = async (id: string, status: string) => {
     try {
-      await fetch(`${API_URL}/api/complaints/update/${id}`, {
+      const res = await fetch(`${API_URL}/api/complaints/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       });
-      // Update state locally after change
+      const updatedComplaint = await res.json();
+
+      // Update state locally
       setComplaints((prev: any) =>
         prev.map((c: any) =>
-          c._id === id ? { ...c, status: status } : c
+          c._id === id ? { ...c, status: updatedComplaint.status } : c
         )
       );
     } catch (err) {
