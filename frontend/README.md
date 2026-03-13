@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NeoConnect – Complaint Management Chatbot
 
-## Getting Started
+## Project Overview
+NeoConnect is a full-stack complaint management system that allows users to easily submit and track complaints through a chatbot-style interface.  
+The system helps organizations manage internal issues efficiently by allowing users to register complaints and receive a unique tracking ID.
 
-First, run the development server:
+Each complaint is stored in a database and can be tracked later using the generated tracking ID.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
+- Submit complaints through an interactive chatbot interface
+- Automatic generation of a unique complaint tracking ID
+- Store complaint details in a database
+- Simple and user-friendly interface
+- Organized complaint records for easy management
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech Stack
 
-## Learn More
+### Frontend
+- HTML
+- CSS
+- JavaScript
 
-To learn more about Next.js, take a look at the following resources:
+### Backend
+- Node.js
+- Express.js
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Database
+- MongoDB
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Deployment
+- Vercel
 
-## Deploy on Vercel
+### Version Control
+- GitHub
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## System Architecture
+
+User → Chatbot Interface → Backend API → Database
+
+1. User opens the web application.
+2. User submits a complaint through the chatbot form.
+3. Backend server processes the request.
+4. Complaint details are stored in the database.
+5. A unique tracking ID is generated.
+6. The user receives confirmation with the tracking ID.
+
+---
+## Implementation Details
+
+### Frontend
+The frontend provides a chatbot-style interface where users can submit complaints by filling a form. The interface collects details such as category, department, location, severity, and description.
+
+### Backend
+The backend is built using Node.js and Express.js. It exposes API endpoints that receive complaint data from the frontend and process the request.
+
+When a complaint is submitted:
+1. The backend receives the form data.
+2. A unique tracking ID is generated.
+3. The complaint data is stored in the database.
+4. A confirmation message with the tracking ID is returned to the user.
+
+### Database
+MongoDB is used as the database to store complaint records. Each complaint is stored as a document containing fields such as tracking ID, category, department, location, severity, description, and status.
+
+### Complaint Tracking
+Each submitted complaint is assigned a unique tracking ID which can be used later to track the status of the complaint.
+
+---
+
+## Project Structure
+neoconnect-project
+│
+├── frontend
+│ ├── index.html
+│ ├── style.css
+│ └── script.js
+│
+├── backend
+│ ├── server.js
+│ ├── routes
+│ ├── models
+│ └── database connection
+│
+└── README.md
+
+---
+
+## Installation and Setup
+
+### 1. Clone the Repository
+https://github.com/harikaragiri/neoconnect-project.git
+### 2. Navigate to Project Folder
+
+
+cd neoconnect-project
+
+
+### 3. Install Backend Dependencies
+
+
+cd backend
+npm install
+
+
+### 4. Run the Server
+
+
+node server.js
+
+
+The server will run on:
+
+
+http://localhost:3000
+
+
+---
+
+## Database
+
+The project uses MongoDB to store complaint records.
+
+Example complaint document stored in the database:
+
+
+trackingId: NEO-1773394678086
+category: Safety
+department: IT
+location: Floor 2
+severity: High
+description: AC not working
+status: New
+
+
+---
+
+## Deployment
+
+Live Application:
+
+
+https://neoconnect-project.vercel.app
+
+
+---
+
+## Future Enhancements
+- Admin dashboard for managing complaints
+- Complaint status updates (New → In Progress → Resolved)
+- Email notifications for complaint updates
+- User authentication system
+- Analytics dashboard for complaints
+
+---
+
+## Conclusion
+NeoConnect simplifies the process of complaint registration and tracking through an easy-to-
