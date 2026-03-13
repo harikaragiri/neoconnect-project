@@ -6,13 +6,26 @@ export default function TrackComplaint() {
   const [trackingId, setTrackingId] = useState("");
   const [result, setResult] = useState<any>(null);
 
-  const searchComplaint = async () => {
-    const response = await fetch(
-      `http://localhost:5000/api/complaints/track/${trackingId}`
-    );
+  // ✅ Use your live Render backend
+  const API_URL = "https://neoconnect-backend-dlnr.onrender.com";
 
-    const data = await response.json();
-    setResult(data);
+  const searchComplaint = async () => {
+    if (!trackingId) return alert("Please enter a Tracking ID");
+
+    try {
+      const response = await fetch(`${API_URL}/api/complaints/track/${trackingId}`);
+      if (!response.ok) {
+        alert("Complaint not found!");
+        setResult(null);
+        return;
+      }
+
+      const data = await response.json();
+      setResult(data);
+    } catch (err) {
+      console.error("Error fetching complaint:", err);
+      alert("Failed to fetch complaint. Please try again.");
+    }
   };
 
   const statusColor = (status: string) => {
@@ -23,7 +36,6 @@ export default function TrackComplaint() {
 
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-10">
-
       <div className="bg-slate-800 p-8 rounded-lg shadow-lg w-[500px] text-white">
 
         <h1 className="text-3xl font-bold mb-6 text-center">
@@ -31,11 +43,11 @@ export default function TrackComplaint() {
         </h1>
 
         <div className="flex gap-2 mb-6">
-
           <input
             type="text"
             placeholder="Enter Tracking ID"
             className="flex-1 p-3 rounded bg-slate-700 text-white border border-slate-600 focus:outline-none"
+            value={trackingId}
             onChange={(e) => setTrackingId(e.target.value)}
           />
 
@@ -45,16 +57,11 @@ export default function TrackComplaint() {
           >
             Search
           </button>
-
         </div>
 
         {result && (
           <div className="bg-slate-700 p-5 rounded-lg space-y-2">
-
-            <p>
-              <b>Tracking ID:</b> {result.trackingId}
-            </p>
-
+            <p><b>Tracking ID:</b> {result.trackingId}</p>
             <p>
               <b>Status:</b>{" "}
               <span
@@ -63,24 +70,13 @@ export default function TrackComplaint() {
                 {result.status}
               </span>
             </p>
-
-            <p>
-              <b>Department:</b> {result.department}
-            </p>
-
-            <p>
-              <b>Location:</b> {result.location}
-            </p>
-
-            <p>
-              <b>Description:</b> {result.description}
-            </p>
-
+            <p><b>Department:</b> {result.department}</p>
+            <p><b>Location:</b> {result.location}</p>
+            <p><b>Description:</b> {result.description}</p>
           </div>
         )}
 
       </div>
-
     </div>
   );
 }
